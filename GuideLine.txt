@@ -1,0 +1,271 @@
+[GuideLine]
+// login using other Computer terminal
+ssh new_user@server_IP_address
+
+[ProFTP]
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install proftpd
+
+[Webmin]
+sudo nano /etc/apt/sources.list
+//add below line at the end
+deb http://download.webmin.com/download/repository sarge contrib
+//When you are finished editing, save the file by pressing Ctrl-X, then y, RETURN.
+
+wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install webmin
+
+// after finish, remove the “deb” from sources.list
+// login : https://server_IP_address:10000
+
+
+[PHPmyadmin]
+sudo apt-get update
+sudo apt-get install phpmyadmin
+
+// login : http://domain_name_or_IP/phpmyadmin
+
+[Install Unzip function]
+sudo apt-get install unzip
+
+[Send Mail]
+sudo apt-get install sendmail-bin
+sudo nano /etc/hosts
+
+########change this#######################################################
+127.0.0.1 localhost
+to
+127.0.0.1   piotr-probook.localdomain piotr-probook localdev localhost
+##########################################################################
+
+sudo service apache2 restart
+
+
+// change to root user
+sudo -i
+
+
+// Install Desktop in AWS
+sudo apt-get install ubuntu-desktop
+sudo apt-get install vnc4server
+sudo apt-get install gnome-panel
+
+sudo nano .vnc/xstartup
+########change this#######################################################
+#!/bin/sh
+
+# Uncomment the following two lines for normal desktop:
+unset SESSION_MANAGER
+# exec /etc/X11/xinit/xinitrc
+gnome-session ?^?^?session=gnome-classic &
+gnome-panel&
+
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+xsetroot -solid grey
+vncconfig -iconic &
+x-terminal-emulator -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+x-window-manager &
+##########################################################################
+
+
+sudo vnc4server -kill:1
+
+
+
+
+
+
+[Laravel]
+replace these three line in <Directory>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+
+Sample:
+<Directory /var/www/html/public/>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+
+
+// ======== Apache - Not allow for directory browsing ====
+Options -Indexes
+
+
+change password:
+passwd
+
+
+[Webmin]
+/etc/init.d/webmin restart
+
+
+// ===========memory swapping===========
+sudo dd if=/dev/zero of=/swapfile bs=250M count=8
+
+ls -lh /swapfile
+
+sudo chmod 600 /swapfile
+
+sudo mkswap /swapfile
+
+sudo swapon /swapfile
+
+ls -lh /swapfile
+
+
+
+
+// ====bitnami=======
+phpmyadmin setup for external access
+
+#Allow from 127.0.0.1
+Allow from all
+
+#Require local
+Require all granted
+
+
+// ====== Generate Self Sign cert ============
+// create the key
+openssl genrsa -out certificate.key 2048
+// create the cert from the key
+openssl req -new -x509 -key certificate.key -out certificate.crt -days 3650 -subj /CN=tubehome.moneymanager365.com
+// Generate CSR
+openssl req -new -newkey rsa:2048 -nodes -out certificate.crt.csr -keyout certificate.crt.key -subj "/C=US/ST=Washington/L=Seattle/O=getaCert/CN=*.moneymanager365.com"
+// Generate P12 Cert
+openssl pkcs12 -export -out keystore.p12 -in certificate.crt -inkey certificate.key
+// Generate Crt from P12
+openssl pkcs12 -in keystore.p12 -clcerts -nokeys -out self_signed_keystore.crt
+
+
+
+// Tomcat - valid for 10 years
+/Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/bin/keytool -genkey -alias tomcat -keyalg RSA -keysize 4096 -validity 3650
+
+configuration for server.xml
+<Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+           maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+           clientAuth="false" sslProtocol="TLS"
+           keyAlias="ALIAS" keystoreFile="/srv/jakarta/.keystore"
+           keystorePass="PW from step 1" />
+
+
+
+
+// ======== create CSR for submission =====
+openssl req -new -newkey rsa:2048 -nodes -out own_getacert_com.csr -keyout own_getacert_com.key -subj "/C=US/ST=Washington/L=Seattle/O=getaCert/CN=*.getacert.com"
+
+
+
+
+// ================SFTP download file =================
+#!/bin/sh
+export SSHPASS=hhcftpuserPassw0rd
+sshpass -e sftp -oBatchMode=no -b -  -P 11122 hhc@118.201.8.58 << !
+   cd /HHC/out
+   lcd /home/ubuntu/gardenia_ftp/out
+   get *
+   
+   bye
+!
+
+
+//========================
+// Clear .DS_STORE
+sudo find / -name ".DS_Store" -depth -exec rm {} \;
+
+
+// =============
+// create a symbolic for a folder in ubuntu
+sudo ln -s /etc/nginx/sites-available/gardeniademo.tk /etc/nginx/sites-enabled/
+sudo service nginx restart
+
+// ====== create sftp ======
+sudo adduser ftpuser
+sudo mkdir -p /var/sftp/uploads
+sudo chown root:root /var/sftp
+sudo chmod 755 /var/sftp
+sudo chown ftpuser:ftpuser /var/sftp/uploads
+sudo nano /etc/ssh/sshd_config
+
+// append the text below
+Match User ftpuser
+ForceCommand internal-sftp
+PasswordAuthentication yes
+ChrootDirectory /var/sftp
+PermitTunnel no
+AllowAgentForwarding no
+AllowTcpForwarding no
+X11Forwarding no
+
+sudo systemctl restart sshd
+// verify the user
+ssh ftpuser@localhost
+
+
+
+// ==================== Bitnami : Add Autostart script in ubuntu-service ======
+sudo cp /opt/lamp70/ctlscript.sh /etc/init.d/bitnami-lamp70
+sudo chmod +x /etc/init.d/bitnami-lamp70
+
+// edit the file
+sudo nano /etc/init.d/bitnami-lamp70
+
+// add the details below after the line :   #!/bin/sh
+### BEGIN INIT INFO
+ # Provides:          bitnami-lamp70
+ # Required-Start:    $remote_fs $syslog
+ # Required-Stop:     $remote_fs $syslog
+ # Default-Start:     2 3 4 5
+ # Default-Stop:      0 1 6
+ # Short-Description: Start daemon at boot time
+ # Description:       Enable services provided by daemon.
+ ### END INIT INFO
+
+
+
+// Generate the keyStore file for android App
+keytool -genkey -v -keystore c:\cyberiodx.keystore -alias CyberiodX -keyalg RSA -keysize 2048 -validity 216000
+
+
+// Extract SHA-256 Code
+keytool -list -v -keystore andy_keystore
+
+
+
+// Change VirtualBox UUID
+VBoxManage internalcommands sethduuid android_5_1.vdi
+
+
+
+// Android KeyStore
+keytool -genkey -v -keystore test.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 36500
+
+// Find SHA1
+keytool -keystore AndyKey3.keystore -list -v
+
+// Delete dot underscore
+find DIRECTORY_ADDRESS -name ._\* -delete
+
+// Install Redis Server
+curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+sudo apt-get update
+sudo apt-get install redis
+
+// Configure Redis Server
+cd /etc/redis/
+nano redis_config
+// enable the public IP address, e.g. 192.168.0.199
+// Then use redis_cli and set the password
+redis_cli 
+CONFIG SET requirepass "mypass"
+
+
+
+
