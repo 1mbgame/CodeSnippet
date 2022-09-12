@@ -73,4 +73,14 @@ public class CacheManager<T> {
             }
         },0,60000);
     }
+    private static void printMemory() {
+
+        Runtime runtime  = Runtime.getRuntime();
+        long totalMemory = runtime.totalMemory()/1000000L;
+        long freeMemory  = runtime.freeMemory()/1000000L;
+
+        String result = "Memory: Used=" + (totalMemory - freeMemory) + "MB, Total=" + totalMemory + "MB, Free=" + freeMemory + "MB";
+        System.out.println(result);
+
+    }
 }
