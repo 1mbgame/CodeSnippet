@@ -17,7 +17,7 @@ import java.util.Map;
  Free
  */
 public class MySSLCertUtil {
-    
+
 
     private TrustManager[] trustManagers;
     private SSLSocketFactory sslSocketFactory;
@@ -37,6 +37,13 @@ public class MySSLCertUtil {
 
      */
 
+    /**
+     * Convert the PEM to P12
+     *  openssl pkcs12 -export -out cert.p12 -in cert.pem -inkey key.pem
+     * @param p12FilePath
+     * @param password
+     * @param alias
+     */
     public void createSSLFactoryFromP12File(String p12FilePath,String password, String alias){
         try{
             InputStream stream = new FileInputStream(p12FilePath);
