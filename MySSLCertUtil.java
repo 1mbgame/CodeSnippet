@@ -17,16 +17,7 @@ import java.util.Map;
  Free
  */
 public class MySSLCertUtil {
-
-    public static final String PUBLIC_KEY = "PUBLIC KEY";
-    public static final String PRIVATE_KEY = "PRIVATE KEY";
-    public static final String SSL_FACTORY = "SSL_FACTORY";
-    public static final String SSL_TRUST_MANAGERS = "SSL_TRUST_MANAGERS";
-    public static final String CERTIFICATE = "CERTIFICATE";
-    public static final String CERTIFICATE_BEGIN = "-----BEGIN CERTIFICATE-----";
-    public static final String CERTIFICATE_END = "-----END CERTIFICATE-----";
-    public static final String PRIVATE_KEY_BEGIN = "-----BEGIN PRIVATE KEY-----";
-    public static final String PRIVATE_KEY_END = "-----END PRIVATE KEY-----";
+    
 
     private TrustManager[] trustManagers;
     private SSLSocketFactory sslSocketFactory;
@@ -202,106 +193,5 @@ public class MySSLCertUtil {
         return null;
     }
 
-    private Map<String, String> readPemFile(String filePath) {
-
-        Map<String, String> resultMap = new LinkedHashMap<>();
-        List<String> lineList = getLines(filePath);
-        StringBuilder sbPublicKey = new StringBuilder();
-        StringBuilder sbPrivateKey = new StringBuilder();
-        StringBuilder sbCertificate = new StringBuilder();
-
-        boolean isPublicKeyContent = false;
-        boolean isPrivateKeyContent = false;
-        boolean isCertificateContent = false;
-
-        for (String line : lineList) {
-
-            if (line.contains(PUBLIC_KEY)) {
-                if (isPublicKeyContent == false) {
-                    isPublicKeyContent = true;
-                    continue;
-                } else {
-                    isPublicKeyContent = false;
-                    continue;
-                }
-            }
-
-            if (line.contains(PRIVATE_KEY)) {
-                if (isPrivateKeyContent == false) {
-                    isPrivateKeyContent = true;
-                    continue;
-                } else {
-                    isPrivateKeyContent = false;
-                    continue;
-                }
-            }
-
-            if (line.contains(CERTIFICATE)) {
-                if (isCertificateContent == false) {
-                    isCertificateContent = true;
-                    continue;
-                } else {
-                    isCertificateContent = false;
-                    continue;
-                }
-            }
-
-            if (isPublicKeyContent) {
-                sbPublicKey.append(line);
-            }
-
-            if (isPrivateKeyContent) {
-                sbPrivateKey.append(line);
-            }
-
-            if (isCertificateContent) {
-                sbCertificate.append(line);
-            }
-        }
-
-        resultMap.put(PUBLIC_KEY, sbPublicKey.toString());
-        resultMap.put(PRIVATE_KEY, sbPrivateKey.toString());
-        resultMap.put(CERTIFICATE, sbCertificate.toString());
-
-        System.out.println("=========> Public Key:");
-        System.out.println(resultMap.get(PUBLIC_KEY));
-        System.out.println("=========> Private Key:");
-        System.out.println(resultMap.get(PRIVATE_KEY));
-        System.out.println("=========> Certificate:");
-        System.out.println(resultMap.get(CERTIFICATE));
-
-        return resultMap;
-
-    }
-
-    private List<String> getLines(String filePath) {
-
-        List<String> list = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line = reader.readLine();
-            while (line != null) {
-                list.add(line);
-                //System.out.println(line);
-                // read next line
-                line = reader.readLine();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return list;
-
-    }
-
-    private void writeFile(String filename, String inputFileContent) {
-        try (FileOutputStream out = new FileOutputStream(filename)) {
-            byte data[] = inputFileContent.getBytes();
-            out.write(data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 }
