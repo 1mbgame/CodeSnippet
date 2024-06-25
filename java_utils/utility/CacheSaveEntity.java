@@ -1,12 +1,8 @@
 package com.ngwisefood.app.utility;
 
-import com.google.gson.Gson;
-import com.ngwisefood.app.database.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.Repository;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class CacheSaveEntity<T> {
 
@@ -38,14 +34,14 @@ public class CacheSaveEntity<T> {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                clearCache();
+                clearCacheAndSave();
             }
         },firstDate,cacheMilliSecond);
 
         System.out.println("Next Clear Cache Date is : " + firstDate);
     }
 
-    public void clearCache() {
+    public void clearCacheAndSave() {
 
         if(isRunning){
             System.out.println("Saving the data into database");
