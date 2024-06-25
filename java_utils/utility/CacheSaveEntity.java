@@ -3,22 +3,23 @@ package com.ngwisefood.app.utility;
 import com.google.gson.Gson;
 import com.ngwisefood.app.database.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.Repository;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 public class CacheSaveEntity<T> {
 
-    private Map<String, T> keyObjectMap = new ConcurrentHashMap<>();
+    private String tag = "[Save]";
+    private List<T> itemList = new ArrayList<>();
     private long cacheMilliSecond = 0;
     private Timer timer;
     private boolean isRunning = false;
     private CrudRepository repository;
 
-    public CacheSaveEntity(CrudRepository repository) {
-        this.repository = repository;
-        cacheMilliSecond = 5 * 60 * 1000;
+    public CacheSaveEntity(String tag,int minute) {
+        this.tag = tag;
+        cacheMilliSecond = minute * 60 * 1000;
         enableSelfTimer();
     }
 
@@ -30,7 +31,7 @@ public class CacheSaveEntity<T> {
         Calendar calendar = Calendar.getInstance();
         int currentMinute = calendar.get(Calendar.MINUTE);
         int nextMinute = 5 - (currentMinute % 5);
-        calendar.add(Calendar.MINUTE,nextMinute);
+        calendar.add(Calendar.MINUTE,1);
         Date firstDate = calendar.getTime();
 
         timer = new Timer();
@@ -50,28 +51,23 @@ public class CacheSaveEntity<T> {
             System.out.println("Saving the data into database");
             return;
         }
+        if(itemList.size() == 0){
+            System.out.println("No data yet");
+            return;
+        }
+
         isRunning = true;
         System.out.println("Start Saving the data into database ...");
 
         boolean isSavingDataSuccess = true;
 
         try{
-            Map<String, T> keyObjectMapTemp = new ConcurrentHashMap<>();
-            List<T> itemList = new ArrayList<>();
-            // Clone the Map
-            keyObjectMapTemp.putAll(keyObjectMap);
-            for(Map.Entry<String, T> entry : keyObjectMapTemp.entrySet()){
-                itemList.add(entry.getValue());
-            }
+
+            List<T> itemList = getAllAndClear();
 
             // Save all the data into database
             if(itemList.size() > 0){
                 this.repository.saveAll(itemList);
-            }
-
-
-            for(Map.Entry<String, T> entry : keyObjectMapTemp.entrySet()){
-                keyObjectMap.remove(entry.getKey());
             }
 
         }catch (Exception e){
@@ -90,36 +86,23 @@ public class CacheSaveEntity<T> {
 
     }
 
-    public void save(String key, T t) {
-        keyObjectMap.put(key, t);
+    public void save(CrudRepository repository, T t) {
+        this.repository = repository;
+        itemList.add(t);
     }
 
     public synchronized List<T> getAllAndClear(){
-        List<T> tList = new ArrayList<>(keyObjectMap.values());
-        clear();
+        List<T> tList = new ArrayList<>();
+        tList.addAll(itemList);
+        itemList.clear();
         return tList;
     }
 
-    public void clear(){
-        keyObjectMap.clear();
-    }
-
-    public void remove(String key){
-        try{
-            keyObjectMap.remove(key);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public int size(){
-        return this.keyObjectMap.size();
+        return this.itemList.size();
     }
 
-    public void saveTest(CrudRepository repository){
-        Gson gson = new Gson();
-        gson.fromJson("", UserEntity.class);
-        repository.save(keyObjectMap.get(""));
+    public void setRepository(CrudRepository repository) {
+        this.repository = repository;
     }
-
 }
