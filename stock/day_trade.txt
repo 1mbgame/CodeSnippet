@@ -1,0 +1,71 @@
+#============== Intra Day  Trading 5 Minutes Timeframe ( New York Session ) ==============
+1) Start Trading at 9:10 PM (New York)
+2) The trade can be placed in between 9:00PM to 10:20PM.
+3) Find out the "Stop Lose(SL)" within that day, the "Stop loss" could be:
+   a) The "Stop Loss" can not be cover by any candle.
+   b) The "Stop loss" are "Double Top, Double Bottom, or Breakout in the same day, 
+      meaning the time range is between 8AM to 9PM.
+   c) If that is no any "Stop Loss" within the same day, look for the previous day.
+   d) The "Stop Loss" can only be the same day or previous day.
+   e) Draw a horizontal line of the "Stop Loss"
+4) When don't trade:
+   a) When that is the red "Forex News" in the Forex Calendar, and wipe out all the
+      "Stop Loss", then no need to trade.
+   b) The "Forex News" is in between 8:00PM to 9:00 PM.
+   c) No "Stop Loss" found in the day.
+5) The Trade MUST be closed before 10:50PM.
+   a) If the trade hit the Profit Target before 10:50PM, then close it.
+6) When can enter the Trade? Swith to :
+   a) Wait for the Signal to occurs,
+   b) The Signal could be the Breakout, Double Bottom or Double Top retest, and reversal.
+   c) Multiple 5 minutes candle breakout
+
+
+#============== Intra Day Trading ==============(not working well)
+1) Start Trading at 3:45PM (London) and 9:10 PM (New York)
+2) Mark down the previous day high/low
+3) Switch to 1 Hour Timeframe: 
+   a) Check the price trending
+   b) Find out the "Long Body Candle" within 1 week, Mark down the Short Candle 
+      with the "rectangle box" after the "Long Body Candle". Example, If "Long Body
+      Candle" goes down, the look for the upper "Short Body Candle", and mark down
+      the "Short Body Candle" with box rectangle, and act as the price resistance
+4) Switch to 15 Minute Timeframe, and 
+   a) Redo the Step 3 (a) and (b), but for intra day only
+   b) Mark down any key level, double top, break up, and double bottom for intra day
+5) Switch to 2 minite
+   a) Wait for the price come back to the highest/lowest Price(Previous day)
+   b) If break up the highest/lowest Price(Previous day), wait for the pull back, 
+      and then enter the trade.
+6) Switch to 2 minite
+   a) Wait for the pullback at about 9:45 to 10:25, enter the trade
+   b) Exit would be the next key level
+
+
+
+// Chart analysis for Price action
+1) Weekly, Daily, and 4H
+2) Daily, 4H, 1H
+
+// Three typeof markets structure
+1) Trending (Tradable)
+2) Ranging  (Tradable)
+3) Choppy   (NOT Tradable)
+
+// Best Entry Point for "Trending Market"
+1) Draw the trending line
+2) First implusive move
+
+// Best Entry Point for "Ranging Market"
+1) Identiy the Support and Resistant
+2) Break out and pull back
+
+
+//Steps
+1) Identify the Trend
+2) Identify the Support and Resistant
+3) 21 Moving average
+4) Candle Stick(Pin Bar)
+
+
+
